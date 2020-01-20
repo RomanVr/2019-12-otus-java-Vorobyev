@@ -29,7 +29,7 @@ public class DIYArrayList<T> implements List<T>{
 
     @Override
     public Iterator<T> iterator() {
-        throw new UnsupportedOperationException();
+        return new ElementsIterator(0);
     }
 
     @Override
@@ -51,10 +51,10 @@ public class DIYArrayList<T> implements List<T>{
     public boolean add(final T t) {
         if(this.m.length == this.size()) {
             final T[] oldM = m;
-            m = (T[]) new Object[this.size() * 2];
+            this.m = (T[]) new Object[this.size() * 2];
             System.arraycopy(oldM,0, m,0, oldM.length);
         }
-        m[this.size] = t;
+        this.m[this.size] = t;
         this.size += 1;
         return  true;
     }
@@ -62,7 +62,7 @@ public class DIYArrayList<T> implements List<T>{
     @Override
     public boolean remove(final Object o) {
         for(int i = 0; i < this.size(); i += 1) {
-            if (m[i].equals(o)) {
+            if (this.m[i].equals(o)) {
                 this.remove(i);
                 return true;
             }
@@ -120,6 +120,7 @@ public class DIYArrayList<T> implements List<T>{
     @Override
     public void clear() {
         this.m = (T[]) new Object[BEGIN_LENGTH];
+        this.size = 0;
     }
 
     @Override
@@ -209,9 +210,12 @@ public class DIYArrayList<T> implements List<T>{
         if(fromIndex == toIndex) {
             return new DIYArrayList<T>();
         }
-        final List<T> newArray = new DIYArrayList<T>();
-        /*Copy with Iterator*/
-        return newArray;
+        final List<T> newArrayList = new DIYArrayList<T>();
+        final ListIterator<T> iterator = this.listIterator(fromIndex);
+        while (iterator.hasNext()) {
+            newArrayList.add(iterator.next());
+        }
+        return newArrayList;
     }
 
     private class ElementsIterator implements ListIterator<T> {
@@ -247,9 +251,9 @@ public class DIYArrayList<T> implements List<T>{
             if(!hasNext()){
                 throw new NoSuchElementException();
             }
-            lastIndex = index;
-            index += 1;
-            return DIYArrayList.this.m[lastIndex];
+            this.lastIndex = this.index;
+            this.index += 1;
+            return DIYArrayList.this.m[this.lastIndex];
         }
 
         @Override
@@ -291,12 +295,12 @@ public class DIYArrayList<T> implements List<T>{
 
         @Override
         public void set(final T t) {
-            DIYArrayList.this.m[index] = t;
+            DIYArrayList.this.m[this.lastIndex] = t;
         }
 
         @Override
-        public void add(T t) {
-            DIYArrayList.this.add(index, t);
+        public void add(final T t) {
+            DIYArrayList.this.add(this.index, t);
         }
     }
 }
