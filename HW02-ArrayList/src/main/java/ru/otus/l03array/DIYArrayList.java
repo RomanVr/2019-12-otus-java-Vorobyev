@@ -50,13 +50,17 @@ public class DIYArrayList<T> implements List<T>{
     @Override
     public boolean add(final T t) {
         if(this.m.length == this.size()) {
-            final T[] oldM = m;
-            this.m = (T[]) new Object[this.size() * 2];
-            System.arraycopy(oldM,0, m,0, oldM.length);
+            listArraySizeIncrease();
         }
         this.m[this.size] = t;
         this.size += 1;
         return  true;
+    }
+
+    private void listArraySizeIncrease() {
+        final T[] oldM = m;
+        this.m = (T[]) new Object[this.size() * 2];
+        System.arraycopy(oldM,0, m,0, oldM.length);
     }
 
     @Override
@@ -90,9 +94,7 @@ public class DIYArrayList<T> implements List<T>{
 
     @Override
     public boolean addAll (final int index, final Collection<? extends T> c) {
-        if(index > this.size() || index < 0) {
-            throw new IndexOutOfBoundsException();
-        }
+        isIndexValidRangeEx(index);
         int newIndex = index;
         for(final T item: c) {
             this.add(newIndex, item);
@@ -125,17 +127,19 @@ public class DIYArrayList<T> implements List<T>{
 
     @Override
     public T get(int index) {
+        isIndexValidRange(index);
+        return this.m[index];
+    }
+
+    private void isIndexValidRange(int index) {
         if(index > this.size() - 1 || index < 0){
             throw new IndexOutOfBoundsException();
         }
-        return this.m[index];
     }
 
     @Override
     public T set(int index, T element) {
-        if(index > this.size() - 1 || index < 0){
-            throw new IndexOutOfBoundsException();
-        }
+        isIndexValidRange(index);
         final T oldElement = this.m[index];
         this.m[index] = element;
         return oldElement;
@@ -143,9 +147,7 @@ public class DIYArrayList<T> implements List<T>{
 
     @Override
     public void add(final int index, final T element) {
-        if(index > this.size() || index < 0) {
-            throw new  IndexOutOfBoundsException();
-        }
+        isIndexValidRangeEx(index);
         if(index == this.size()) {
             add(element);
         } else {
@@ -160,9 +162,15 @@ public class DIYArrayList<T> implements List<T>{
         }
     }
 
+    private void isIndexValidRangeEx(int index) {
+        if(index > this.size() || index < 0) {
+            throw new  IndexOutOfBoundsException();
+        }
+    }
+
     @Override
     public T remove(final int index) {
-        if (index > this.size() - 1 || index < 0) throw new IndexOutOfBoundsException();
+        isIndexValidRange(index);
         final T element = m[index];
         if (index != this.size()) {
             System.arraycopy(m, index + 1, m, index, this.size() - index - 1);
