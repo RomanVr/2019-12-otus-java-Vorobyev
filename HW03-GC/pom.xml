@@ -23,15 +23,12 @@
                 <artifactId>maven-jar-plugin</artifactId>
                 <configuration>
                     <archive>
-                        <manifect>
+                        <manifest>
                             <mainClass>ru.otus.l06gc.GcTesting</mainClass>
-                        </manifect>
+                        </manifest>
                     </archive>
                 </configuration>
             </plugin>
         </plugins>
     </build>
-
-
-
 </project>

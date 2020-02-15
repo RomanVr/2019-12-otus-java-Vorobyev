@@ -5,8 +5,9 @@ package ru.otus.l06gc;
 http://openjdk.java.net/jeps/158
 
 
--Xms512m
--Xmx512m
+-Xms512m  //Initial size, in bytes, of the heap.
+-Xmx8196m //Maximum size, in bytes, of the heap.
+
 -Xlog:gc=debug:file=./logs/gc-%p-%t.log:tags,uptime,time,level:filecount=5,filesize=10m
 -XX:+HeapDumpOnOutOfMemoryError
 -XX:HeapDumpPath=./logs/dump
@@ -26,6 +27,10 @@ http://openjdk.java.net/jeps/158
     -XX:MaxGCPauseMillis=10, time: 91 sec
  */
 
+/*
+
+*/
+
 import com.sun.management.GarbageCollectionNotificationInfo;
 
 import javax.management.MBeanServer;
@@ -43,8 +48,8 @@ public class GcTesting {
         switchOnMonitoring();
         long beginTime = System.currentTimeMillis();
 
-        int size = 50_000;
-        int loopCounter = 1000;
+        int size = 500_000;
+        int loopCounter = 10000;
 
         MBeanServer mbs = ManagementFactory.getPlatformMBeanServer();
         ObjectName name = new ObjectName("ru.otus:type=Benchmark");
