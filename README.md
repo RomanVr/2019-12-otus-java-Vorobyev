@@ -9,6 +9,7 @@ https://github.com/RomanVr/2019-12-otus-java-Vorobyev.git
 ### Домашние задания:
 1. Проект maven с модульной структурой
 2. DIY ArrayList
+3. Сравнение GC
 
 ### Преподаватели
 Сергей Петрелевич<br>
