@@ -23,6 +23,7 @@
     <modules>
         <module>HW01-maven</module>
         <module>HW02-ArrayList</module>
+        <module>HW04-LogAnnotation</module>
     </modules>
 
     <properties>
