@@ -23,13 +23,16 @@
     <modules>
         <module>HW01-maven</module>
         <module>HW02-ArrayList</module>
+        <module>HW06-ATM_Emulator</module>
     </modules>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <maven.compiler.source>13</maven.compiler.source>
         <maven.compiler.target>13</maven.compiler.target>
         <com.google.guava.version>27.1-jre</com.google.guava.version>
+        <junit.ver>5.6.0</junit.ver>
         <my.variable>42</my.variable>
     </properties>
 
@@ -40,7 +43,20 @@
                 <artifactId>guava</artifactId>
                 <version>${com.google.guava.version}</version>
             </dependency>
+            <dependency>
+                <groupId>org.junit.jupiter</groupId>
+                <artifactId>junit-jupiter-engine</artifactId>
+                <version>${junit.ver}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.junit.jupiter</groupId>
+                <artifactId>junit-jupiter-params</artifactId>
+                <version>${junit.ver}</version>
+
+            </dependency>
+
         </dependencies>
+
     </dependencyManagement>
 
     <!--Родительский артеффакт -->
