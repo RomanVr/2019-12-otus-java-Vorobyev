@@ -1,7 +1,5 @@
 package ru.otus.atmemulator;
 
-import java.util.*;
-
 public class DemoATM {
     public static void main(String[] args) {
         ATM atm = ATM.newBuilder()
@@ -13,14 +11,16 @@ public class DemoATM {
                 .setCountB5000(10)
                 .build();
 
-        for(ATM.Banknotes banknot: ATM.Banknotes.values()) {
+        ATM_Service atmService = new ATM_Service(atm);
+
+        for(Banknote banknot: Banknote.values()) {
             System.out.println("banknot = " + banknot.value);
         }
 
-        System.out.println("Balance: " + atm.getBalance());
+        System.out.println("Balance: " + atmService.getBalance());
 
-        atm.getCash(25689);
+        atmService.getCash(25689);
 
-        System.out.println("Balance: " + atm.getBalance());
+        System.out.println("Balance: " + atmService.getBalance());
     }
 }
