@@ -1,6 +1,6 @@
 package ru.otus.atmemulator;
 
-public enum Banknote {
+public enum BanknoteEnum {
     B100(100),
     B200(200),
     B500(500),
@@ -10,7 +10,7 @@ public enum Banknote {
 
     int value;
 
-    Banknote(int value) {
+    BanknoteEnum(int value) {
         this.value = value;
     }
 }
