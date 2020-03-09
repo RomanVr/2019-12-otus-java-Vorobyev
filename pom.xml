@@ -23,6 +23,7 @@
     <modules>
         <module>HW01-maven</module>
         <module>HW02-ArrayList</module>
+        <module>HW07-DepartmentATM</module>
     </modules>
 
     <properties>
