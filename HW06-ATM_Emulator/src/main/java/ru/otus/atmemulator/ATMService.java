@@ -4,30 +4,16 @@ import java.util.Map;
 import java.util.TreeMap;
 
 public class ATMService {
-    private final ATM atm;
-
-    public ATMService(ATM atm){
-        if(atm == null) {
-            throw new IllegalArgumentException("Cannot be null!");
-        }
-        this.atm = atm;
-    }
-
-    public void addCountBanknot(BanknoteEnum banknot, int count) {
-        int countOld = this.atm.getCountBanknot(banknot);
-        this.atm.setCountBanknote(banknot, count + countOld);
-    }
-
-    public int getBalance() {
+    public static int getBalance(ATM atm) {
         int balance = 0;
-        for(Map.Entry<BanknoteEnum, Cassette> item: this.atm.getCassetteMap().entrySet()) {
+        for(Map.Entry<BanknoteEnum, Cassette> item: atm.getCassetteMap().entrySet()) {
             balance += item.getKey().value * item.getValue().getCount();
         }
         return balance;
     }
 
-    public Map<BanknoteEnum, Integer> getCash(int amount) {
-        if(this.getBalance() - amount < 0) {
+    public static Map<BanknoteEnum, Integer> getCash(ATM atm, int amount) {
+        if(getBalance(atm) - amount < 0) {
             throw new RuntimeException("limit is exceeded");
         }
         final Map<BanknoteEnum, Integer> banknotesNew = new TreeMap<>();

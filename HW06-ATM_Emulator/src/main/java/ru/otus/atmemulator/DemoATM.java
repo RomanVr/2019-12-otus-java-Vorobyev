@@ -2,7 +2,7 @@ package ru.otus.atmemulator;
 
 public class DemoATM {
     public static void main(String[] args) {
-        AtmImpl atm = AtmImpl.newBuilder()
+        ATM atm = AtmImpl.newBuilder()
                 .setCountB100(2)
                 .setCountB200(4)
                 .setCountB500(6)
@@ -11,16 +11,14 @@ public class DemoATM {
                 .setCountB5000(10)
                 .build();
 
-        ATMService atmService = new ATMService(atm);
-
         for(BanknoteEnum banknot: BanknoteEnum.values()) {
             System.out.println("banknot = " + banknot.value);
         }
 
-        System.out.println("Balance: " + atmService.getBalance());
+        System.out.println("Balance: " + ATMService.getBalance(atm));
 
-        atmService.getCash(25689);
+        ATMService.getCash(atm, 25689);
 
-        System.out.println("Balance: " + atmService.getBalance());
+        System.out.println("Balance: " + ATMService.getBalance(atm));
     }
 }

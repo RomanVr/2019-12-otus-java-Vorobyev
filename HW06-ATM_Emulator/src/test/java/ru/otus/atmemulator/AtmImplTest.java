@@ -9,7 +9,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class AtmImplTest {
     private ATM atm;
-    private ATMService atmService;
 
     @BeforeEach
     void setAtm() {
@@ -21,13 +20,12 @@ class AtmImplTest {
                .setCountB2000(6)
                .setCountB5000(10)
                .build();
-        this.atmService = new ATMService(this.atm);
     }
 
     @Test
     void getBalance() {
         final int expectedAmount = 69000;
-        assertEquals(expectedAmount, this.atmService.getBalance());
+        assertEquals(expectedAmount, ATMService.getBalance(this.atm));
         ATM atmEmpty = AtmImpl.newBuilder()
                 .setCountB100(0)
                 .setCountB200(0)
@@ -36,8 +34,8 @@ class AtmImplTest {
                 .setCountB2000(0)
                 .setCountB5000(0)
                 .build();
-        ATMService atmServiceEmpty = new ATMService(atmEmpty);
-        assertEquals(0, atmServiceEmpty.getBalance());
+
+        assertEquals(0, ATMService.getBalance(atmEmpty));
     }
 
     @ParameterizedTest
@@ -47,8 +45,8 @@ class AtmImplTest {
             "43400, 25689"
     })
     void getCash(int expectedRestBalance, int cash) {
-        this.atmService.getCash(cash);
-        int actualRestAmount = this.atmService.getBalance();
+        ATMService.getCash(this.atm, cash);
+        int actualRestAmount = ATMService.getBalance(this.atm);
         assertEquals(expectedRestBalance, actualRestAmount);
     }
 
@@ -63,16 +61,5 @@ class AtmImplTest {
     })
     void getCountBanknot(BanknoteEnum banknot, int count) {
         assertEquals(this.atm.getCountBanknot(banknot), count);
-    }
-
-    @ParameterizedTest
-    @CsvSource({
-            "B100, 10, 70000",
-            "B5000, 1, 74000"
-    })
-    void addCountBanknot(BanknoteEnum banknot, int count, int amountExpected) {
-        this.atmService.addCountBanknot(banknot, count);
-        int amountActual = this.atmService.getBalance();
-        assertEquals(amountExpected, amountActual);
     }
 }
