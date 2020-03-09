@@ -30,7 +30,7 @@
         <maven.compiler.source>13</maven.compiler.source>
         <maven.compiler.target>13</maven.compiler.target>
         <com.google.guava.version>27.1-jre</com.google.guava.version>
-        <my.variable>42</my.variable>
+        <junit.ver>5.6.0</junit.ver>
     </properties>
 
     <dependencyManagement>
@@ -39,6 +39,16 @@
                 <groupId>com.google.guava</groupId>
                 <artifactId>guava</artifactId>
                 <version>${com.google.guava.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.junit.jupiter</groupId>
+                <artifactId>junit-jupiter-engine</artifactId>
+                <version>${junit.ver}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.junit.jupiter</groupId>
+                <artifactId>junit-jupiter-params</artifactId>
+                <version>${junit.ver}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
