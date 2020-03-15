@@ -6,34 +6,27 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.TreeMap;
 
-public class AtmImpl implements ATM, Listener {
+public class AtmImpl implements ATM {
     private final Map<BanknoteEnum, Cassette> cassetteMap;
     private final Map<BanknoteEnum, Integer> banknotesBegin;
 
     private AtmImpl(){
-        this.banknotesBegin = initDefault();
-        this.cassetteMap = new TreeMap<BanknoteEnum, Cassette>(Collections.reverseOrder());
+        this.banknotesBegin = null;
+        this.cassetteMap = null;
     }
 
     private AtmImpl(Map<BanknoteEnum, Integer> banknotesBegin) {
         this.cassetteMap = new TreeMap<BanknoteEnum, Cassette>(Collections.reverseOrder());
         this.banknotesBegin = banknotesBegin;
-        banknotesBegin.forEach((banknote, count) -> {
+        initDefault();
+    }
+
+    private void initDefault() {
+        this.banknotesBegin.forEach((banknote, count) -> {
             Cassette currentCassette = new Cassette();
             currentCassette.setCount(count);
             cassetteMap.put(banknote, currentCassette);
         });
-    }
-
-    private Map<BanknoteEnum, Integer> initDefault() {
-        Map<BanknoteEnum, Integer> banknotesDefault = new TreeMap<>();
-        banknotesDefault.put(BanknoteEnum.B100, 0);
-        banknotesDefault.put(BanknoteEnum.B200, 0);
-        banknotesDefault.put(BanknoteEnum.B500, 0);
-        banknotesDefault.put(BanknoteEnum.B1000, 0);
-        banknotesDefault.put(BanknoteEnum.B2000, 0);
-        banknotesDefault.put(BanknoteEnum.B5000, 0);
-        return banknotesDefault;
     }
 
     private Cassette getCassette(BanknoteEnum banknote) {
@@ -61,24 +54,33 @@ public class AtmImpl implements ATM, Listener {
         return currentCassette.setCount(count);
     }
 
-    @Override
-    public void onReset() {
+    private final Listener listener = this::initDefault;
 
+    @Override
+    public Listener getListener() {
+        return listener;
     }
 
     public static Builder newBuilder() {
         return new AtmImpl().new Builder();
     }
 
-    public static AtmImpl Builder(Map<BanknoteEnum, Integer> banknotesBegin) {
-        return new AtmImpl(banknotesBegin);
-    }
-
     public class Builder {
         private final Map<BanknoteEnum, Integer> banknotesBegin;
 
+        private Map<BanknoteEnum, Integer> initDefault() {
+            Map<BanknoteEnum, Integer> banknotesDefault = new TreeMap<>();
+            banknotesDefault.put(BanknoteEnum.B100, 0);
+            banknotesDefault.put(BanknoteEnum.B200, 0);
+            banknotesDefault.put(BanknoteEnum.B500, 0);
+            banknotesDefault.put(BanknoteEnum.B1000, 0);
+            banknotesDefault.put(BanknoteEnum.B2000, 0);
+            banknotesDefault.put(BanknoteEnum.B5000, 0);
+            return banknotesDefault;
+        }
+
         private Builder() {
-            this.banknotesBegin = AtmImpl.this.initDefault();
+            this.banknotesBegin = this.initDefault();
         }
 
         public Builder setCountB100(int countB100) {
@@ -102,7 +104,7 @@ public class AtmImpl implements ATM, Listener {
         }
 
         public Builder setCountB2000(int countB2000) {
-            AtmImpl.this.banknotesBegin.put(BanknoteEnum.B2000, countB2000);
+            this.banknotesBegin.put(BanknoteEnum.B2000, countB2000);
             return this;
         }
 
@@ -112,7 +114,7 @@ public class AtmImpl implements ATM, Listener {
         }
 
         public AtmImpl build() {
-            return AtmImpl.this;
+            return new AtmImpl(this.banknotesBegin);
         }
     }
 }

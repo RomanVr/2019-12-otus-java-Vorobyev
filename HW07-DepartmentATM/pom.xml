@@ -24,13 +24,11 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>ru.otus.department.DemoDepartment</mainClass>
+                            <mainClass>ru.otus.demo.DemoDepartment</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
             </plugin>
         </plugins>
     </build>
-
-
 </project>
