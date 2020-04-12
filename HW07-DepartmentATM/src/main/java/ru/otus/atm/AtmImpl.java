@@ -27,7 +27,8 @@ public class AtmImpl implements ATM {
         });
     }
 
-    private Cassette getCassette(BanknoteEnum banknote) {
+    @Override
+    public Cassette getCassette(BanknoteEnum banknote) {
         return this.cassetteMap.getOrDefault(banknote, null);
     }
 

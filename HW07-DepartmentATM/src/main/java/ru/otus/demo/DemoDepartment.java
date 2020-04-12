@@ -2,6 +2,7 @@ package ru.otus.demo;
 
 import ru.otus.atm.ATM;
 import ru.otus.atm.AtmImpl;
+import ru.otus.atm.BanknoteEnum;
 import ru.otus.department.AtmService;
 import ru.otus.department.AtmServiceImpl;
 import ru.otus.department.Department;
@@ -27,11 +28,17 @@ public class DemoDepartment {
 
         AtmService atmService = new AtmServiceImpl();
 
+        atm.setCountBanknote(BanknoteEnum.B100, 0);
+
         System.out.println("Balance: " + atmService.getBalance(atm));
 
         Department department = new Department(atmService);
         department.addAtm(atm);
         department.addAtm(atm1);
+
+        System.out.println("Balance: " + department.getAllBalance());
+
+        department.toReset();
 
         System.out.println("Balance: " + department.getAllBalance());
     }

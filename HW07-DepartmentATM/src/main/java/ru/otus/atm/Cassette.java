@@ -6,12 +6,21 @@ public class Cassette {
     private final int size;
     public int count;
 
-    private Cassette(final int size) {
+    public Cassette(final int size) {
+        this.count = 0;
+        if (size < 1) {
+            this.size = SIZEINIT;
+            return;
+        }
         this.size = size;
     }
 
     public Cassette() {
         this(SIZEINIT);
+    }
+
+    public int getSize() {
+        return size;
     }
 
     public int getCount() {
@@ -24,10 +33,11 @@ public class Cassette {
         return true;
     }
 
-    public void addCount(final int count) {
-        if(count < 0) return;
+    public boolean addCount(final int count) {
+        if(count < 0) return false;
         final int newCount = this.count + count;
-        if(newCount > size) return;
+        if(newCount > size) return false;
         this.count = newCount;
+        return true;
     }
 }

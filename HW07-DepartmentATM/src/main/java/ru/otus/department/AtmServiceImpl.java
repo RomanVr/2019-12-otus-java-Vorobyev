@@ -1,6 +1,7 @@
 package ru.otus.department;
 
 import ru.otus.atm.ATM;
+import ru.otus.atm.AtmImpl;
 import ru.otus.atm.BanknoteEnum;
 import ru.otus.atm.Cassette;
 
@@ -8,6 +9,8 @@ import java.util.Map;
 import java.util.TreeMap;
 
 public class AtmServiceImpl implements AtmService {
+
+    public AtmServiceImpl() {};
 
     @Override
     public int getBalance(ATM atm) {
