@@ -1,7 +1,5 @@
 package ru.otus.atm;
 
-import ru.otus.department.Listener;
-
 import java.util.Collections;
 import java.util.Map;
 import java.util.TreeMap;
@@ -18,10 +16,10 @@ public class AtmImpl implements ATM {
     private AtmImpl(Map<BanknoteEnum, Integer> banknotesBegin) {
         this.cassetteMap = new TreeMap<BanknoteEnum, Cassette>(Collections.reverseOrder());
         this.banknotesBegin = banknotesBegin;
-        initDefault();
+        setBanknotesDefault();
     }
 
-    private void initDefault() {
+    private void setBanknotesDefault() {
         this.banknotesBegin.forEach((banknote, count) -> {
             Cassette currentCassette = new Cassette();
             currentCassette.setCount(count);
@@ -54,15 +52,19 @@ public class AtmImpl implements ATM {
         return currentCassette.setCount(count);
     }
 
-    private final Listener listener = this::initDefault;
+    private final SetToDefault listener = this::setBanknotesDefault;
 
     @Override
-    public Listener getListener() {
+    public SetToDefault getListener() {
         return listener;
     }
 
     public static Builder newBuilder() {
         return new AtmImpl().new Builder();
+    }
+
+    public static AtmImpl newBuilderDefault() {
+        return new AtmImpl().new Builder().build();
     }
 
     public class Builder {
