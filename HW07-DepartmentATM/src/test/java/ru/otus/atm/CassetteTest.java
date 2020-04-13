@@ -1,6 +1,5 @@
 package ru.otus.atm;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
@@ -13,7 +12,7 @@ class CassetteTest {
     void getCount() {
         int size = 10;
         int expectedCount = 10;
-        Cassette cassette = new Cassette(size);
+        Cassette cassette = new CassetteImpl(size);
         cassette.setCount(expectedCount);
         assertEquals(expectedCount, cassette.getCount());
     }
@@ -27,7 +26,7 @@ class CassetteTest {
     void getCountWrong(int countWrong) {
         int size = 10;
         int expectedCount = 0;
-        Cassette cassette = new Cassette(size);
+        Cassette cassette = new CassetteImpl(size);
         cassette.setCount(countWrong);
         assertEquals(expectedCount, cassette.getCount());
     }
@@ -40,7 +39,7 @@ class CassetteTest {
     })
     void setCountWrong(int countWrong) {
         int size = 10;
-        Cassette cassette = new Cassette(size);
+        Cassette cassette = new CassetteImpl(size);
         assertFalse(cassette.setCount(countWrong));
     }
 
@@ -48,7 +47,7 @@ class CassetteTest {
     void setCount() {
         int size = 10;
         int count = 10;
-        Cassette cassette = new Cassette(size);
+        Cassette cassette = new CassetteImpl(size);
         assertTrue(cassette.setCount(count));
     }
 
@@ -60,7 +59,7 @@ class CassetteTest {
     })
     void addCountWrong(int countWrong) {
         int size = 10;
-        Cassette cassette = new Cassette(size);
+        Cassette cassette = new CassetteImpl(size);
         assertFalse(cassette.addCount(countWrong));
     }
 
@@ -68,7 +67,7 @@ class CassetteTest {
     void addCount() {
         int size = 10;
         int count = 10;
-        Cassette cassette = new Cassette(size);
+        Cassette cassette = new CassetteImpl(size);
         assertTrue(cassette.addCount(count));
     }
 }

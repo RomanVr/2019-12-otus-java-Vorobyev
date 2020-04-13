@@ -1,7 +1,6 @@
 package ru.otus.department;
 
 import ru.otus.atm.ATM;
-import ru.otus.atm.AtmImpl;
 import ru.otus.atm.BanknoteEnum;
 import ru.otus.atm.Cassette;
 

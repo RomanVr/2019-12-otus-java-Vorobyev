@@ -21,7 +21,7 @@ public class AtmImpl implements ATM {
 
     private void setBanknotesDefault() {
         this.banknotesBegin.forEach((banknote, count) -> {
-            Cassette currentCassette = new Cassette();
+            Cassette currentCassette = new CassetteImpl();
             currentCassette.setCount(count);
             cassetteMap.put(banknote, currentCassette);
         });

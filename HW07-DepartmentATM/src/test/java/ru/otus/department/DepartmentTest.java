@@ -63,10 +63,11 @@ class DepartmentTest {
     void toReset() {
         this.addAtms();
         int balanceIntermediate = 21800;
-        int expectBalance = 22300;
         this.atm.setCountBanknote(BanknoteEnum.B100, 0);
         this.atm1.setCountBanknote(BanknoteEnum.B100, 0);
         assertEquals(balanceIntermediate, this.department.getAllBalance());
+
+        int expectBalance = 22300;
         this.department.toReset();
         assertEquals(expectBalance, this.department.getAllBalance());
     }
