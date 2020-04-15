@@ -20,7 +20,7 @@ class DepartmentTest {
 
     @BeforeEach
     void setAtms() {
-        this.department = new Department(new AtmServiceImpl());
+        this.department = new Department(AtmServiceImpl.getInstance());
         this.atm = AtmImpl.newBuilder()
                 .setCountB100(2)
                 .setCountB200(2)

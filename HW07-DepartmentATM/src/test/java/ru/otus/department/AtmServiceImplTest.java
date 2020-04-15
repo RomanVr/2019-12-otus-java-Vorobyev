@@ -27,7 +27,7 @@ class AtmServiceImplTest {
     }
     @BeforeEach
     void setAtmService() {
-        this.atmService = new AtmServiceImpl();
+        this.atmService = AtmServiceImpl.getInstance();
     }
 
     @Test

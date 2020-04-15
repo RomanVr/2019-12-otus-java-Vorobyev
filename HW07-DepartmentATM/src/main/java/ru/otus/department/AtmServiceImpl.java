@@ -9,8 +9,6 @@ import java.util.TreeMap;
 
 public class AtmServiceImpl implements AtmService {
 
-    public AtmServiceImpl() {};
-
     @Override
     public int getBalance(ATM atm) {
         int balance = 0;
@@ -45,5 +43,15 @@ public class AtmServiceImpl implements AtmService {
             }
         }
         return banknotesNew;
+    }
+
+    private AtmServiceImpl() {}
+
+    static public AtmServiceImpl getInstance() {
+        return SingletonHolder.instance;
+    }
+
+    private static class SingletonHolder {
+        static final AtmServiceImpl instance = new AtmServiceImpl();
     }
 }

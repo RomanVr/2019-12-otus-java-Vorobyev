@@ -25,8 +25,9 @@ public class DemoDepartment {
                 .setCountB2000(1)
                 .setCountB5000(1)
                 .build();
+        ATM atm2 = ((AtmImpl) atm1).clone();
 
-        AtmService atmService = new AtmServiceImpl();
+        AtmService atmService = AtmServiceImpl.getInstance();
 
         atm.setCountBanknote(BanknoteEnum.B100, 0);
 
@@ -34,7 +35,10 @@ public class DemoDepartment {
 
         Department department = new Department(atmService);
         department.addAtm(atm);
+        System.out.println("Balance: " + department.getAllBalance());
         department.addAtm(atm1);
+        System.out.println("Balance: " + department.getAllBalance());
+        department.addAtm(atm2);
 
         System.out.println("Balance: " + department.getAllBalance());
 

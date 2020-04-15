@@ -4,7 +4,7 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.TreeMap;
 
-public class AtmImpl implements ATM {
+public class AtmImpl implements ATM, Cloneable {
     private final Map<BanknoteEnum, Cassette> cassetteMap;
     private final Map<BanknoteEnum, Integer> banknotesBegin;
 
@@ -40,6 +40,13 @@ public class AtmImpl implements ATM {
     };
 
     @Override
+    public Map<BanknoteEnum, Integer> getBanknotesBegin() {
+        Map<BanknoteEnum, Integer> cloneBanknnote = new TreeMap<BanknoteEnum, Integer>();
+        cloneBanknnote.putAll(this.banknotesBegin);
+        return cloneBanknnote;
+    }
+
+    @Override
     public int getCountBanknot(BanknoteEnum banknote) {
         Cassette currentCassette = getCassette(banknote);
         if(currentCassette == null) return 0;
@@ -58,6 +65,15 @@ public class AtmImpl implements ATM {
     @Override
     public SetToDefault getListener() {
         return listener;
+    }
+
+    private AtmImpl(ATM atm) {
+        this(atm.getBanknotesBegin());
+    }
+
+    @Override
+    public AtmImpl clone() {
+        return new AtmImpl(this);
     }
 
     public static Builder newBuilder() {

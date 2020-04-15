@@ -7,5 +7,6 @@ public interface ATM {
     public boolean setCountBanknote(BanknoteEnum banknot, int count);
     public int getCountBanknot(BanknoteEnum banknot);
     public SetToDefault getListener();
+    public Map<BanknoteEnum, Integer> getBanknotesBegin();
     public Cassette getCassette(BanknoteEnum banknote);
 }
