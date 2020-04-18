@@ -24,6 +24,7 @@
         <module>HW01-maven</module>
         <module>HW02-ArrayList</module>
         <module>HW06-ATM_Emulator</module>
+        <module>HW14-SequenceNumbers</module>
     </modules>
 
     <properties>
