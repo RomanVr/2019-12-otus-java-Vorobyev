@@ -1,6 +1,9 @@
 package ru.otus.atm;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -8,7 +11,7 @@ public class AtmImpl implements ATM, Cloneable {
     private final Map<BanknoteEnum, Cassette> cassetteMap;
     private final Map<BanknoteEnum, Integer> banknotesBegin;
 
-    private AtmImpl(){
+    private AtmImpl() {
         this.banknotesBegin = null;
         this.cassetteMap = null;
     }
@@ -37,7 +40,9 @@ public class AtmImpl implements ATM, Cloneable {
         Map<BanknoteEnum, Cassette> newCassetteMap = new TreeMap<BanknoteEnum, Cassette>(Collections.reverseOrder());
         newCassetteMap.putAll(this.cassetteMap);
         return newCassetteMap;
-    };
+    }
+
+    ;
 
     @Override
     public Map<BanknoteEnum, Integer> getBanknotesBegin() {
@@ -49,14 +54,14 @@ public class AtmImpl implements ATM, Cloneable {
     @Override
     public int getCountBanknot(BanknoteEnum banknote) {
         Cassette currentCassette = getCassette(banknote);
-        if(currentCassette == null) return 0;
+        if (currentCassette == null) return 0;
         return currentCassette.getCount();
     }
 
     @Override
     public boolean setCountBanknote(BanknoteEnum banknote, int count) {
         Cassette currentCassette = getCassette(banknote);
-        if(currentCassette == null) return false;
+        if (currentCassette == null) return false;
         return currentCassette.setCount(count);
     }
 
@@ -76,16 +81,17 @@ public class AtmImpl implements ATM, Cloneable {
         return new AtmImpl(this);
     }
 
-    public static Builder newBuilder() {
+    public static Builder newBuilder() throws NoSuchMethodException {
         return new AtmImpl().new Builder();
     }
 
-    public static AtmImpl newBuilderDefault() {
+    public static AtmImpl newBuilderDefault() throws NoSuchMethodException {
         return new AtmImpl().new Builder().build();
     }
 
     public class Builder {
         private final Map<BanknoteEnum, Integer> banknotesBegin;
+        private Map<BanknoteEnum, Method> methodsMap;
 
         private Map<BanknoteEnum, Integer> initDefault() {
             Map<BanknoteEnum, Integer> banknotesDefault = new TreeMap<>();
@@ -98,8 +104,25 @@ public class AtmImpl implements ATM, Cloneable {
             return banknotesDefault;
         }
 
-        private Builder() {
+        private Method getMethodBuilder(BanknoteEnum banknote) {
+            return this.methodsMap.get(banknote);
+        }
+
+        private Builder() throws NoSuchMethodException {
             this.banknotesBegin = this.initDefault();
+            this.methodsMap = new HashMap<>();
+            methodsMap.put(BanknoteEnum.B100, Builder.class.getMethod("setCountB100", int.class));
+            methodsMap.put(BanknoteEnum.B200, Builder.class.getMethod("setCountB200", int.class));
+            methodsMap.put(BanknoteEnum.B500, Builder.class.getMethod("setCountB500", int.class));
+            methodsMap.put(BanknoteEnum.B1000, Builder.class.getMethod("setCountB1000", int.class));
+            methodsMap.put(BanknoteEnum.B2000, Builder.class.getMethod("setCountB2000", int.class));
+            methodsMap.put(BanknoteEnum.B5000, Builder.class.getMethod("setCountB5000", int.class));
+        }
+
+        public Builder setBanknote(BanknoteEnum banknote, int count) throws InvocationTargetException, IllegalAccessException {
+            Method method = getMethodBuilder(banknote);
+            Builder builder = (Builder) method.invoke(this, count);
+            return builder;
         }
 
         public Builder setCountB100(int countB100) {

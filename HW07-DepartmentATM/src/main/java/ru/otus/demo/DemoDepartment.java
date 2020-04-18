@@ -7,8 +7,10 @@ import ru.otus.department.AtmService;
 import ru.otus.department.AtmServiceImpl;
 import ru.otus.department.Department;
 
+import java.lang.reflect.InvocationTargetException;
+
 public class DemoDepartment {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
         ATM atm = AtmImpl.newBuilder()
                 .setCountB100(2)
                 .setCountB200(2)
@@ -18,12 +20,12 @@ public class DemoDepartment {
                 .setCountB5000(1)
                 .build();
         ATM atm1 = AtmImpl.newBuilder()
-                .setCountB100(3)
-                .setCountB200(2)
-                .setCountB500(1)
-                .setCountB1000(3)
-                .setCountB2000(1)
-                .setCountB5000(1)
+                .setBanknote(BanknoteEnum.B100, 3)
+                .setBanknote(BanknoteEnum.B200 ,2)
+                .setBanknote(BanknoteEnum.B500 ,1)
+                .setBanknote(BanknoteEnum.B1000 ,3)
+                .setBanknote(BanknoteEnum.B2000 ,1)
+                .setBanknote(BanknoteEnum.B5000 ,1)
                 .build();
         ATM atm2 = ((AtmImpl) atm1).clone();
 

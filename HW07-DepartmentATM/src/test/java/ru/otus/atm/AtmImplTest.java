@@ -5,6 +5,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
+import java.lang.reflect.InvocationTargetException;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class AtmImplTest {
@@ -12,14 +14,22 @@ class AtmImplTest {
 
     @BeforeEach
     void setAtm() {
-        this.atm = AtmImpl.newBuilder()
-                .setCountB100(2)
-                .setCountB200(4)
-                .setCountB500(6)
-                .setCountB1000(3)
-                .setCountB2000(6)
-                .setCountB5000(10)
-                .build();
+        try {
+            this.atm = AtmImpl.newBuilder()
+                    .setBanknote(BanknoteEnum.B100, 2)
+                    .setBanknote(BanknoteEnum.B200 ,2)
+                    .setBanknote(BanknoteEnum.B500 ,1)
+                    .setBanknote(BanknoteEnum.B1000 ,3)
+                    .setBanknote(BanknoteEnum.B2000 ,1)
+                    .setBanknote(BanknoteEnum.B5000 ,1)
+                    .build();
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (NoSuchMethodException e) {
+            e.printStackTrace();
+        }
     }
 
     @ParameterizedTest

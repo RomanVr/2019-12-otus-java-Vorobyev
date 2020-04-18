@@ -7,6 +7,9 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import ru.otus.atm.ATM;
 import ru.otus.atm.AtmImpl;
+import ru.otus.atm.BanknoteEnum;
+
+import java.lang.reflect.InvocationTargetException;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -16,14 +19,22 @@ class AtmServiceImplTest {
 
     @BeforeEach
     void setAtm() {
-        this.atm = AtmImpl.newBuilder()
-                .setCountB100(2)
-                .setCountB200(4)
-                .setCountB500(6)
-                .setCountB1000(3)
-                .setCountB2000(6)
-                .setCountB5000(10)
-                .build();
+        try {
+            this.atm = AtmImpl.newBuilder()
+                    .setBanknote(BanknoteEnum.B100, 2)
+                    .setBanknote(BanknoteEnum.B200 ,4)
+                    .setBanknote(BanknoteEnum.B500 ,6)
+                    .setBanknote(BanknoteEnum.B1000 ,3)
+                    .setBanknote(BanknoteEnum.B2000 ,6)
+                    .setBanknote(BanknoteEnum.B5000 ,10)
+                    .build();
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (NoSuchMethodException e) {
+            e.printStackTrace();
+        }
     }
     @BeforeEach
     void setAtmService() {
@@ -34,14 +45,23 @@ class AtmServiceImplTest {
     void getBalance() {
         final int expectedAmount = 69000;
         assertEquals(expectedAmount, atmService.getBalance(this.atm));
-        ATM atmEmpty = AtmImpl.newBuilder()
-                .setCountB100(0)
-                .setCountB200(0)
-                .setCountB500(0)
-                .setCountB1000(0)
-                .setCountB2000(0)
-                .setCountB5000(0)
-                .build();
+        ATM atmEmpty = null;
+        try {
+            atmEmpty = AtmImpl.newBuilder()
+                    .setBanknote(BanknoteEnum.B100, 0)
+                    .setBanknote(BanknoteEnum.B200 ,0)
+                    .setBanknote(BanknoteEnum.B500 ,0)
+                    .setBanknote(BanknoteEnum.B1000 ,0)
+                    .setBanknote(BanknoteEnum.B2000 ,0)
+                    .setBanknote(BanknoteEnum.B5000 ,0)
+                    .build();
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (NoSuchMethodException e) {
+            e.printStackTrace();
+        }
 
         assertEquals(0, atmService.getBalance(atmEmpty));
     }

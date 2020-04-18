@@ -6,6 +6,8 @@ import ru.otus.atm.ATM;
 import ru.otus.atm.AtmImpl;
 import ru.otus.atm.BanknoteEnum;
 
+import java.lang.reflect.InvocationTargetException;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class DepartmentTest {
@@ -21,22 +23,38 @@ class DepartmentTest {
     @BeforeEach
     void setAtms() {
         this.department = new Department(AtmServiceImpl.getInstance());
-        this.atm = AtmImpl.newBuilder()
-                .setCountB100(2)
-                .setCountB200(2)
-                .setCountB500(1)
-                .setCountB1000(3)
-                .setCountB2000(1)
-                .setCountB5000(1)
-                .build();
-        this.atm1 = AtmImpl.newBuilder()
-                .setCountB100(3)
-                .setCountB200(2)
-                .setCountB500(1)
-                .setCountB1000(3)
-                .setCountB2000(1)
-                .setCountB5000(1)
-                .build();
+        try {
+            this.atm = AtmImpl.newBuilder()
+                    .setBanknote(BanknoteEnum.B100, 2)
+                    .setBanknote(BanknoteEnum.B200 ,2)
+                    .setBanknote(BanknoteEnum.B500 ,1)
+                    .setBanknote(BanknoteEnum.B1000 ,3)
+                    .setBanknote(BanknoteEnum.B2000 ,1)
+                    .setBanknote(BanknoteEnum.B5000 ,1)
+                    .build();
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (NoSuchMethodException e) {
+            e.printStackTrace();
+        }
+        try {
+            this.atm1 = AtmImpl.newBuilder()
+                    .setBanknote(BanknoteEnum.B100, 3)
+                    .setBanknote(BanknoteEnum.B200 ,2)
+                    .setBanknote(BanknoteEnum.B500 ,1)
+                    .setBanknote(BanknoteEnum.B1000 ,3)
+                    .setBanknote(BanknoteEnum.B2000 ,1)
+                    .setBanknote(BanknoteEnum.B5000 ,1)
+                    .build();
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (NoSuchMethodException e) {
+            e.printStackTrace();
+        }
     }
 
     @Test
