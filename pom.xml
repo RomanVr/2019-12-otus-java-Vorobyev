@@ -25,6 +25,7 @@
         <module>HW02-ArrayList</module>
         <module>HW06-ATM_Emulator</module>
         <module>HW07-DepartmentATM</module>
+        <module>hw08-DIY_Gson</module>
     </modules>
 
     <properties>
@@ -34,6 +35,8 @@
         <maven.compiler.target>13</maven.compiler.target>
         <com.google.guava.version>27.1-jre</com.google.guava.version>
         <junit.ver>5.6.0</junit.ver>
+        <javax.json.version>1.1.4</javax.json.version>
+        <com.google.code.gson>2.8.6</com.google.code.gson>
         <my.variable>42</my.variable>
     </properties>
 
@@ -53,11 +56,23 @@
                 <groupId>org.junit.jupiter</groupId>
                 <artifactId>junit-jupiter-params</artifactId>
                 <version>${junit.ver}</version>
-
             </dependency>
-
+            <dependency>
+                <groupId>javax.json</groupId>
+                <artifactId>javax.json-api</artifactId>
+                <version>${javax.json.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.glassfish</groupId>
+                <artifactId>javax.json</artifactId>
+                <version>${javax.json.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.google.code.gson</groupId>
+                <artifactId>gson</artifactId>
+                <version>${com.google.code.gson}</version>
+            </dependency>
         </dependencies>
-
     </dependencyManagement>
 
     <!--Родительский артеффакт -->
