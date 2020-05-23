@@ -4,9 +4,9 @@ public class SequenceCount {
     private final String nameTread1 = "Поток 1";
     private final String nameTread2 = "Поток 2";
 
-    int i = 1;
+    volatile int i = 1;
     boolean seq = true;
-    final int finishCount = 500;
+    final int finishCount = 100;
     int count = 1;
 
     volatile boolean isPrinted = false;
