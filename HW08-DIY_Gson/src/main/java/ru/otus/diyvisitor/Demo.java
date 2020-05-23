@@ -5,9 +5,7 @@ import com.google.gson.Gson;
 import ru.otus.diyvisitor.exampleobjects.TestPrimitiveObj;
 import ru.otus.diyvisitor.exampleobjects.TestObj;
 
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 public class Demo {
@@ -24,9 +22,7 @@ public class Demo {
         TestObj testObj = new TestObj(1, "22", 3.2, testPrim,
                 intArr, strArr, primObjs, primList);
 
-        JsonObjectService jsonService = new JsonObjectService();
-        new DIYGson().toJson(testObj, jsonService);
-        String DIYjson = jsonService.build();
+        String DIYjson = new DIYGson().toJson(testObj);
 
         String gson = new Gson().toJson(testObj);
 

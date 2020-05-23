@@ -1,81 +1,223 @@
 package ru.otus.diyvisitor;
 
-import ru.otus.diyvisitor.types.*;
-import ru.otus.diyvisitor.visitor.Service;
-
 import javax.json.Json;
 import javax.json.JsonArrayBuilder;
-import javax.json.JsonObjectBuilder;
-import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
+import javax.json.JsonString;
+import javax.json.JsonValue;
+import java.io.UnsupportedEncodingException;
+import java.nio.charset.Charset;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 public class DIYGson {
-    public void toJson(Object obj, Service service) throws IllegalAccessException {
-        if (obj == null) return;
 
-        Field[] fields = obj.getClass().getDeclaredFields();
-        for(Field field : fields) {
-            field.setAccessible(true);
+    private Set<Class> typesPrimitiveInt;
+    private Set<Class> typesPrimitive;
+    private static final String[] REPLACEMENT_CHARS = new String[128];
 
-            if (Modifier.isStatic(field.getModifiers())) {
-
-            } else if (field.getType().isPrimitive()) {//Primitive
-                new ProcessingPrimitive(field, obj).accept(service);
-
-            } else if (field.getType().isAssignableFrom(String.class)) {//String
-                new ProcessingString(field, obj).accept(service);
-
-            } else if(field.getType().isAssignableFrom(List.class)) {//List
-                List list = (List) field.get(obj);
-                Object[] array = list.toArray();
-                toJsonArray(array, field, service);
-
-            } else if(field.getType().isAssignableFrom(Set.class)) {
-                Set set = (Set) field.get(obj);
-                if (set == null) {
-                    new ProcessingArrayNull(field);
-                    continue;
-                }
-                Object[] array = set.toArray();
-                toJsonArray(array, field, service);
-
-            } else if (field.getType().isArray()) {//Array
-                Object array = field.get(obj);
-                if (array == null) {
-                    new ProcessingArrayNull(field);
-                    continue;
-                }
-                toJsonArray(array, field, service);
-
-            } else {//Object
-                JsonObjectBuilder jsonObjectBuilderNew = Json.createObjectBuilder();
-                Object value = field.get(obj);
-                if (value == null) {
-                    new ProcessingObjectNull(field);
-                    continue;
-                }
-                toJson(value, new JsonObjectService(jsonObjectBuilderNew));
-                new ProcessingObject(field, jsonObjectBuilderNew).accept(service);
-            }
-        }
+    public DIYGson() {
+        this.typesPrimitiveInt = new HashSet<>();
+        this.typesPrimitive = new HashSet<>();
+        init();
     }
 
-    private void toJsonArray(Object array, Field field, Service service) throws IllegalAccessException {
-        if (array.getClass().getComponentType().isPrimitive() || //Если тип элемента массива примитивный или String то вызываем процессинг заполнения
-            array.getClass().getComponentType().getSimpleName().equals(String.class.getSimpleName())) {
-            new ProcessingArray(field, array).accept(service);
-        } else {// если тип элемента массива не примитивный (объект или массив) то рекурсивно вызываем toJson
-            // передавая новый сервис
-            JsonArrayBuilder jsArr = Json.createArrayBuilder();
-            Object[] arrCast = (Object[]) array;
-            for (Object elem : arrCast) {
-                JsonObjectBuilder jsonObjectBuilderNew = Json.createObjectBuilder();
-                toJson(elem, new JsonObjectService(jsonObjectBuilderNew));
-                jsArr.add(jsonObjectBuilderNew);
-            }
-            new ProcessingObjectInArray(field, jsArr).accept(service);
+    public String toJson(Object testObj) {
+        if (testObj == null) return "null";
+
+        System.out.println("Class : " + testObj.getClass().getSimpleName());
+        // если примитивный объект
+        if (typesPrimitive.contains(testObj.getClass())) {
+            return toJsonPrimitive(testObj);
         }
+
+        if (testObj instanceof String) {// если строка
+            System.out.println("String testObj");
+            String str = toJsonString(testObj.toString());
+            return str;
+        }
+
+        //если массив примитивов
+        if (testObj.getClass().isArray()) {
+            System.out.println("Array testObj");
+            return toJsonArray(testObj);
+        }
+        //если List
+        if (testObj instanceof List) {
+            System.out.println("List testObj");
+            List list = (List) testObj;
+            Object[] array = list.toArray();
+            return toJsonList(array);
+        }
+
+        System.out.println("Object testObj");
+
+        JsonObjectService jsonService = new JsonObjectService();
+        try {
+            new TraversalObject().toJson(testObj, jsonService);
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
+        return jsonService.build();
+    }
+
+    private String toJsonString(String str) {
+        int size = str.length();
+        String replacement = "";
+        String newStr = "\"";
+        for (int i = 0; i < size; i += 1) {
+            char c = str.charAt(i);
+            System.out.println("char {} : {}" + i + c);
+            if (c == 34) {
+                newStr += "\\\"";
+                continue;
+            }
+            replacement = REPLACEMENT_CHARS[c];
+            if (replacement == null) {
+                newStr += c;
+                continue;
+            }
+            newStr += replacement;
+        }
+        newStr += "\"";
+        return newStr;
+    }
+
+    private String toJsonList(Object[] array) {
+        JsonArrayBuilder jsArray = Json.createArrayBuilder();
+        if (array.length !=0) {
+            Object elem0 = array[0];
+            String typeName = elem0.getClass().getSimpleName();
+            System.out.println("Elem type : " + elem0.getClass().getSimpleName());
+            for(Object elem: array) {
+                switch (typeName) {
+                    case "Byte":
+                    case "Short":
+                    case "Integer": {
+                        jsArray.add((int) elem);
+                        break;
+                    }
+                    case "Long":{
+                        jsArray.add((long) elem);
+                        break;
+                    }
+                    case "Float":
+                    case "Double": {
+                        jsArray.add((double) elem);
+                        break;
+                    }
+                    case "String":
+                    case "Character": {
+                        jsArray.add((String) elem);
+                        break;
+                    }
+                }
+            }
+        }
+        return jsArray.build().toString();
+    }
+
+    private String toJsonPrimitive(Object testObj) {
+        JsonValue jsonPrimitive = JsonValue.NULL;
+        Class<?> fieldType = testObj.getClass();
+        System.out.println("Primitive testObj");
+        if (testObj instanceof Byte) {
+            jsonPrimitive = Json.createValue((byte) testObj);
+        } else if (testObj instanceof Short) {
+            jsonPrimitive = Json.createValue((short) testObj);
+        } else if (testObj instanceof Integer) {
+            jsonPrimitive = Json.createValue((int) testObj);
+        } else if(testObj instanceof Boolean) {
+            jsonPrimitive = ((boolean) testObj) ? JsonValue.TRUE : JsonValue.FALSE;
+        } else if(testObj instanceof Long) {
+            jsonPrimitive = Json.createValue((long) testObj);
+        } else if(testObj instanceof Character) {
+            jsonPrimitive = Json.createValue(testObj.toString());
+        } else if(testObj instanceof Float || testObj instanceof Double) {
+            jsonPrimitive = Json.createValue(((Number) testObj).doubleValue());
+        }
+        return jsonPrimitive.toString();
+    }
+
+    private String toJsonArray(Object array) {
+        System.out.println("Type Array : " + array.getClass().getComponentType() + " " + array.getClass().getSimpleName());
+
+        String typeName = array.getClass().getSimpleName();
+
+        JsonArrayBuilder jsArray = Json.createArrayBuilder();
+
+        switch (typeName) {
+            case "int[]":
+            case "byte[]":
+            case "short[]": {
+                int[] arrCast = (int[]) array;
+                for (int elem : arrCast) {
+                    jsArray.add(elem);
+                }
+                break;
+            }
+            case "long[]": {
+                long[] arrCast = (long[]) array;
+                for (long elem : arrCast) {
+                    jsArray.add(elem);
+                }
+                break;
+            }
+            case "java.lang.String[]":
+            case "char[]": {
+                String[] arrCast = (String[]) array;
+                for (String elem : arrCast) {
+                    jsArray.add(elem);
+                }
+                break;
+            }
+            case "float[]": {
+                float[] arrCast = (float[]) array;
+                for (float elem : arrCast) {
+                    jsArray.add(elem);
+                }
+                break;
+            }
+            case "double[]": {
+                double[] arrCast = (double[]) array;
+                for (double elem : arrCast) {
+                    jsArray.add(elem);
+                }
+                break;
+            }
+        }
+        return jsArray.build().toString();
+    }
+
+    private void init() {
+        typesPrimitiveInt.add(int.class);
+        typesPrimitiveInt.add(byte.class);
+        typesPrimitiveInt.add(short.class);
+        typesPrimitiveInt.add(Integer.class);
+        typesPrimitiveInt.add(Byte.class);
+        typesPrimitiveInt.add(Short.class);
+
+        typesPrimitive.add(int.class);
+        typesPrimitive.add(byte.class);
+        typesPrimitive.add(short.class);
+        typesPrimitive.add(char.class);
+        typesPrimitive.add(double.class);
+        typesPrimitive.add(float.class);
+        typesPrimitive.add(long.class);
+
+        typesPrimitive.add(Integer.class);
+        typesPrimitive.add(Byte.class);
+        typesPrimitive.add(Short.class);
+        typesPrimitive.add(Character.class);
+        typesPrimitive.add(Double.class);
+        typesPrimitive.add(Float.class);
+        typesPrimitive.add(Long.class);
+
+        REPLACEMENT_CHARS[60] = "\\u003c";
+        REPLACEMENT_CHARS[62] = "\\u003e";
+        REPLACEMENT_CHARS[38] = "\\u0026";
+        REPLACEMENT_CHARS[61] = "\\u003d";
+        REPLACEMENT_CHARS[39] = "\\u0027";
+        // REPLACEMENT_CHARS[34] = "\\u0022";
     }
 }
