@@ -25,6 +25,7 @@
         <module>HW02-ArrayList</module>
         <module>HW06-ATM_Emulator</module>
         <module>HW07-DepartmentATM</module>
+        <module>HW09-DIY_ORM</module>
     </modules>
 
     <properties>
@@ -34,7 +35,10 @@
         <maven.compiler.target>13</maven.compiler.target>
         <com.google.guava.version>27.1-jre</com.google.guava.version>
         <junit.ver>5.6.0</junit.ver>
-        <my.variable>42</my.variable>
+        <logback.version>1.2.3</logback.version>
+        <slf4j.version>1.7.30</slf4j.version>
+        <h2.version>1.4.200</h2.version>
+
     </properties>
 
     <dependencyManagement>
@@ -45,6 +49,11 @@
                 <version>${com.google.guava.version}</version>
             </dependency>
             <dependency>
+                <groupId>com.h2database</groupId>
+                <artifactId>h2</artifactId>
+                <version>${h2.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>org.junit.jupiter</groupId>
                 <artifactId>junit-jupiter-engine</artifactId>
                 <version>${junit.ver}</version>
@@ -53,9 +62,19 @@
                 <groupId>org.junit.jupiter</groupId>
                 <artifactId>junit-jupiter-params</artifactId>
                 <version>${junit.ver}</version>
-
             </dependency>
-
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-api</artifactId>
+                <version>${slf4j.version}</version>
+                <scope>compile</scope>
+            </dependency>
+            <dependency>
+                <groupId>ch.qos.logback</groupId>
+                <artifactId>logback-classic</artifactId>
+                <version>${logback.version}</version>
+                <scope>compile</scope>
+            </dependency>
         </dependencies>
 
     </dependencyManagement>
