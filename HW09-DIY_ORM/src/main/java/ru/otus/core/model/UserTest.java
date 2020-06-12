@@ -1,17 +1,12 @@
 package ru.otus.core.model;
 
-import ru.otus.jdbc.Id;
-
-public class User {
-    @Id
+public class UserTest {
     private final long id;
     private final String name;
-    private final int age;
 
-    public User(long id, String name, int age) {
+    public UserTest(long id, String name) {
         this.id = id;
         this.name = name;
-        this.age = age;
     }
 
     public long getId() {
@@ -22,16 +17,11 @@ public class User {
         return name;
     }
 
-    public int getAge() {
-        return age;
-    }
-
     @Override
     public String toString() {
-        return "User {" +
+        return "UserTest {" +
                 "id=" + id +
                 ", name='" + name + '\'' +
-                ", age=" + age +
                 "}";
     }
 }

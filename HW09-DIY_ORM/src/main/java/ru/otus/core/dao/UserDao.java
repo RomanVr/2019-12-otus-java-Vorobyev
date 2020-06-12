@@ -1,14 +1,15 @@
 package ru.otus.core.dao;
 
-import ru.otus.core.model.User;
+import ru.otus.core.model.UserTest;
 import ru.otus.core.sessionmanager.SessionManager;
 
 import java.util.Optional;
 
 public interface UserDao {
-    Optional<User> findByid(long id);
+    Optional<UserTest> findByid(long id);
 
-    long saveUser(User user);
+    long saveUser(UserTest userTest);
 
     SessionManager getSessionManager();
 }
+

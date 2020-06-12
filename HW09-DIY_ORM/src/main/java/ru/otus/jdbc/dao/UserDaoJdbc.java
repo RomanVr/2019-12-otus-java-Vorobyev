@@ -4,7 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.otus.core.dao.UserDao;
 import ru.otus.core.dao.UserDaoException;
-import ru.otus.core.model.User;
+import ru.otus.core.model.UserTest;
 import ru.otus.core.sessionmanager.SessionManager;
 import ru.otus.jdbc.sessionmanager.SessionManagerJdbc;
 
@@ -17,9 +17,9 @@ public class UserDaoJdbc implements UserDao {
     private static final Logger logger = LoggerFactory.getLogger(UserDaoJdbc.class);
 
     private final SessionManagerJdbc sessionManager;
-    private final DBExecutor<User> dbExecutor;
+    private final DBExecutor<UserTest> dbExecutor;
 
-    public UserDaoJdbc(SessionManagerJdbc sessionManager, DBExecutor<User> dbExecutor) {
+    public UserDaoJdbc(SessionManagerJdbc sessionManager, DBExecutor<UserTest> dbExecutor) {
         this.sessionManager = sessionManager;
         this.dbExecutor = dbExecutor;
     }
@@ -29,9 +29,9 @@ public class UserDaoJdbc implements UserDao {
     }
 
     @Override
-    public long saveUser(User user) {
+    public long saveUser(UserTest userTest) {
         try {
-            return dbExecutor.insertRecord(getConnection(), "insert into user(name) values(?)", Collections.singletonList(user.getName()));
+            return dbExecutor.insertRecord(getConnection(), "insert into userTest(name) values(?)", Collections.singletonList(userTest.getName()));
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
             throw new UserDaoException(e);
@@ -39,16 +39,16 @@ public class UserDaoJdbc implements UserDao {
     }
 
     @Override
-    public Optional<User> findByid(long id) {
+    public Optional<UserTest> findByid(long id) {
         try {
             return dbExecutor.selectRecord(
                     getConnection(),
-                    "select id, name from user where id = ?",
+                    "select id, name from userTest where id = ?",
                     id,
                     resultSet -> {
                         try {
                             if (resultSet.next()) {
-                                return new User(resultSet.getLong("id"), resultSet.getString("name"));
+                                return new UserTest(resultSet.getLong("id"), resultSet.getString("name"));
                             }
                         } catch (SQLException e) {
                             logger.error(e.getMessage(), e);

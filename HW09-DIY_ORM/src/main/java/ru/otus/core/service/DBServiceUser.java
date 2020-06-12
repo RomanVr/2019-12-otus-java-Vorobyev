@@ -1,11 +1,11 @@
 package ru.otus.core.service;
 
-import ru.otus.core.model.User;
+import ru.otus.core.model.UserTest;
 
 import java.util.Optional;
 
 public interface DBServiceUser {
-    long saveUser(User user);
+    long saveUser(UserTest userTest);
 
-    Optional<User> getUser(long id);
+    Optional<UserTest> getUser(long id);
 }

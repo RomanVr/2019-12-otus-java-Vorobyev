@@ -3,12 +3,12 @@ package ru.otus.core.service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.otus.core.dao.UserDao;
-import ru.otus.core.model.User;
+import ru.otus.core.model.UserTest;
 import ru.otus.core.sessionmanager.SessionManager;
 
 import java.util.Optional;
 
-public class DBServiceUserImpl implements DBServiceUser{
+public class  DBServiceUserImpl implements DBServiceUser{
     private static Logger logger = LoggerFactory.getLogger(DBServiceUserImpl.class);
 
     private final UserDao userDao;
@@ -18,11 +18,11 @@ public class DBServiceUserImpl implements DBServiceUser{
     }
 
     @Override
-    public long saveUser(User user) {
+    public long saveUser(UserTest userTest) {
         try (SessionManager sessionManager = userDao.getSessionManager()){
             sessionManager.beginSession();
             try {
-                long userId = userDao.saveUser(user);
+                long userId = userDao.saveUser(userTest);
                 sessionManager.commitSession();
 
                 logger.info("Create User by id: {}", userId);
@@ -36,11 +36,11 @@ public class DBServiceUserImpl implements DBServiceUser{
     }
 
     @Override
-    public Optional<User> getUser(long id) {
+    public Optional<UserTest> getUser(long id) {
         try (SessionManager sessionManager = userDao.getSessionManager()) {
             sessionManager.beginSession();
             try {
-                Optional<User> userOptional = userDao.findByid(id);
+                Optional<UserTest> userOptional = userDao.findByid(id);
                 logger.info("User finded: {}", userOptional.orElse(null));
                 return userOptional;
             } catch (Exception ex) {
