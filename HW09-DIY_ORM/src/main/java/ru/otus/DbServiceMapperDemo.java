@@ -4,7 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.otus.core.dao.Dao;
 import ru.otus.core.model.User;
-import ru.otus.core.service.DBServiceImpl;
+import ru.otus.core.service.DBService_User;
 import ru.otus.h2.DataSourceH2;
 import ru.otus.jdbc.dao.DBExecutorMapper;
 import ru.otus.jdbc.dao.DaoJdbc;
@@ -25,13 +25,17 @@ public class DbServiceMapperDemo {
         demo.createTableUser(dataSource);
 
         SessionManagerJdbc sessionManager = new SessionManagerJdbc(dataSource);
-        DBExecutorMapper dbExecutorMapper = new DBExecutorMapper();
-        JdbcMapper jdbcMapper = new JdbcMapper(sessionManager, dbExecutorMapper);
-        Dao dao = new DaoJdbc(sessionManager, jdbcMapper);
 
-        DBServiceImpl dbService = new DBServiceImpl(dao);
+        DBExecutorMapper<User> dbExecutorMapper = new DBExecutorMapper<User>();
+        JdbcMapper<User> jdbcMapper = new JdbcMapper<User>(sessionManager, dbExecutorMapper);
+        Dao<User> dao = new DaoJdbc<User>(sessionManager, jdbcMapper);
+
+        DBService_User dbService = new DBService_User(dao);
         long id = dbService.create(new User(0, "name1", 24));
-        // logger.info("User created by id : {}", id);
+        dbService.update(new User(id, "name2", 33));
+        User userFromDB = dbService.load(id, User.class);
+
+        dbService.createOrUpdate(new User(1, "name2", 33));
 
     }
 

@@ -34,4 +34,13 @@ public class User {
                 ", age=" + age +
                 "}";
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || this.getClass() != o.getClass()) return false;
+        User that = (User) o;
+        return this.name == that.name &&
+                this.age == that.age;
+    }
 }

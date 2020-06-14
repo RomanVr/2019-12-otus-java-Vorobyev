@@ -6,6 +6,8 @@ import ru.otus.core.dao.Dao;
 import ru.otus.core.sessionmanager.SessionManager;
 import ru.otus.jdbc.sessionmanager.SessionManagerJdbc;
 
+import java.util.Optional;
+
 public class DaoJdbc<T> implements Dao<T> {
     private static final Logger logger = LoggerFactory.getLogger(DaoJdbc.class);
 
@@ -18,24 +20,24 @@ public class DaoJdbc<T> implements Dao<T> {
     }
 
     @Override
-    public <T> long create(T objectData) {
+    public long create(T objectData) {
         long id = jdbcMapper.create(objectData);
         return id;
     }
 
     @Override
-    public <T> void update(T objectData) {
-
+    public int update(T objectData) {
+        return jdbcMapper.update(objectData);
     }
 
     @Override
-    public <T> void createOrUpdate(T objectData) {
-
+    public void createOrUpdate(T objectData) {
+        jdbcMapper.createOrUpdate(objectData);
     }
 
     @Override
-    public <T> T load(long id, Class<T> clazz) {
-        return null;
+    public Optional<T> load(long id, Class<T> clazz) {
+        return jdbcMapper.load(id, clazz);
     }
 
     @Override
