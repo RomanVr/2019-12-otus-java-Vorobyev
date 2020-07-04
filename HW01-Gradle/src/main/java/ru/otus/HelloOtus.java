@@ -17,7 +17,7 @@ import java.util.List;
  * unzip -l gradleHelloWorld-0.1.jar
  *
  */
-public class App {
+public class HelloOtus {
     public static void main(String... args) {
         List<Integer> example = new ArrayList<>();
         int min = 0;
