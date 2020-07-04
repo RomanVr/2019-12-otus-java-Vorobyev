@@ -2,8 +2,10 @@ package ru.otus.jdbc.dao;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import ru.otus.core.dao.Dao;
 import ru.otus.core.dao.UserDaoException;
 import ru.otus.core.service.DBServiceExeption;
+import ru.otus.core.sessionmanager.SessionManager;
 import ru.otus.jdbc.Id;
 import ru.otus.jdbc.sessionmanager.SessionManagerJdbc;
 
@@ -19,13 +21,13 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
 
-public class JdbcMapper<T> {
-    private static final Logger logger = LoggerFactory.getLogger(JdbcMapper.class);
+public class DaoJdbcMapper<T> implements Dao<T> {
+    private static final Logger logger = LoggerFactory.getLogger(DaoJdbcMapper.class);
 
     private final SessionManagerJdbc sessionManager;
     private final DBExecutorMapper<T> dbExecutor;
 
-    public JdbcMapper(SessionManagerJdbc sessionManager, DBExecutorMapper<T> dbExecutor) {
+    public DaoJdbcMapper(SessionManagerJdbc sessionManager, DBExecutorMapper<T> dbExecutor) {
         this.sessionManager = sessionManager;
         this.dbExecutor = dbExecutor;
     }
@@ -34,6 +36,12 @@ public class JdbcMapper<T> {
         return sessionManager.getCurrentSession().getConnection();
     }
 
+    @Override
+    public SessionManager getSessionManager() {
+        return null;
+    }
+
+    @Override
     public long create(T objectData) {
         logger.info("Object to insert: {}" , objectData);
         Field[] fields = objectData.getClass().getDeclaredFields();
@@ -71,6 +79,7 @@ public class JdbcMapper<T> {
         }
     }
 
+    @Override
     public int update(T objectData) {
         logger.info("Object to update: {}" , objectData);
         Field[] fields = objectData.getClass().getDeclaredFields();
@@ -114,6 +123,7 @@ public class JdbcMapper<T> {
         }
     }
 
+    @Override
     public void createOrUpdate(T objectdata) {
         logger.info("object createOrUpdate : {}", objectdata.getClass().getSimpleName());
         Field[] fields = objectdata.getClass().getDeclaredFields();
@@ -145,21 +155,7 @@ public class JdbcMapper<T> {
         create(objectdata);
     }
 
-    private long getValueIdAnnotation(final T objectdata) {
-        Field[] fields = objectdata.getClass().getDeclaredFields();
-        for (Field field: fields) {
-            if (field.isAnnotationPresent(Id.class)) {
-                field.setAccessible(true);
-                try {
-                    return (long) field.get(objectdata);
-                } catch (IllegalAccessException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-        return -1;
-    }
-
+    @Override
     public Optional<T> load(long id, Class<T> clazz) {
         logger.info("Object to load id = {} clazz : {}" , id, clazz);
         Field[] fields = clazz.getDeclaredFields();
@@ -229,6 +225,21 @@ public class JdbcMapper<T> {
             logger.error(ex.getMessage(), ex);
         }
         return Optional.empty();
+    }
+
+    private long getValueIdAnnotation(final T objectdata) {
+        Field[] fields = objectdata.getClass().getDeclaredFields();
+        for (Field field: fields) {
+            if (field.isAnnotationPresent(Id.class)) {
+                field.setAccessible(true);
+                try {
+                    return (long) field.get(objectdata);
+                } catch (IllegalAccessException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        return -1;
     }
     //"select id, name from userTest where id = ?"
     private String getSqlStringSelect(String tableName, List<String> fieldNames) {

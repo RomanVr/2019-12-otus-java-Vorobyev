@@ -12,32 +12,32 @@ public class DaoJdbc<T> implements Dao<T> {
     private static final Logger logger = LoggerFactory.getLogger(DaoJdbc.class);
 
     private final SessionManagerJdbc sessionManager;
-    private final JdbcMapper<T> jdbcMapper;
+    private final DaoJdbcMapper<T> daoJdbcMapper;
 
-    public DaoJdbc(SessionManagerJdbc sessionManager, JdbcMapper<T> jdbcMapper) {
+    public DaoJdbc(SessionManagerJdbc sessionManager, DaoJdbcMapper<T> daoJdbcMapper) {
         this.sessionManager = sessionManager;
-        this.jdbcMapper = jdbcMapper;
+        this.daoJdbcMapper = daoJdbcMapper;
     }
 
     @Override
     public long create(T objectData) {
-        long id = jdbcMapper.create(objectData);
+        long id = daoJdbcMapper.create(objectData);
         return id;
     }
 
     @Override
     public int update(T objectData) {
-        return jdbcMapper.update(objectData);
+        return daoJdbcMapper.update(objectData);
     }
 
     @Override
     public void createOrUpdate(T objectData) {
-        jdbcMapper.createOrUpdate(objectData);
+        daoJdbcMapper.createOrUpdate(objectData);
     }
 
     @Override
     public Optional<T> load(long id, Class<T> clazz) {
-        return jdbcMapper.load(id, clazz);
+        return daoJdbcMapper.load(id, clazz);
     }
 
     @Override

@@ -7,8 +7,7 @@ import ru.otus.core.model.User;
 import ru.otus.core.service.DBService_User;
 import ru.otus.h2.DataSourceH2;
 import ru.otus.jdbc.dao.DBExecutorMapper;
-import ru.otus.jdbc.dao.DaoJdbc;
-import ru.otus.jdbc.dao.JdbcMapper;
+import ru.otus.jdbc.dao.DaoJdbcMapper;
 import ru.otus.jdbc.sessionmanager.SessionManagerJdbc;
 
 import javax.sql.DataSource;
@@ -27,15 +26,16 @@ public class DbServiceMapperDemo {
         SessionManagerJdbc sessionManager = new SessionManagerJdbc(dataSource);
 
         DBExecutorMapper<User> dbExecutorMapper = new DBExecutorMapper<User>();
-        JdbcMapper<User> jdbcMapper = new JdbcMapper<User>(sessionManager, dbExecutorMapper);
-        Dao<User> dao = new DaoJdbc<User>(sessionManager, jdbcMapper);
+        Dao<User> dao = new DaoJdbcMapper<User>(sessionManager, dbExecutorMapper);
 
         DBService_User dbService = new DBService_User(dao);
         long id = dbService.create(new User(0, "name1", 24));
         dbService.update(new User(id, "name2", 33));
         User userFromDB = dbService.load(id, User.class);
 
-        dbService.createOrUpdate(new User(1, "name2", 33));
+        dbService.createOrUpdate(new User(1, "name3", 33));
+
+        userFromDB = dbService.load(1, User.class);
 
     }
 
