@@ -38,24 +38,24 @@ public class DaoJdbcMapper<T> implements Dao<T> {
 
     @Override
     public SessionManager getSessionManager() {
-        return null;
+        return sessionManager;
     }
 
     @Override
     public long create(T objectData) {
-        logger.info("Object to insert: {}" , objectData);
+        logger.info("Object to insert: {}", objectData);
         Field[] fields = objectData.getClass().getDeclaredFields();
 
         //Проверка есть ли аннотация @Id в классе
-        if (!isExistAnnoId(fields)) {
+        if (!isExistAnnoId(objectData.getClass())) {
             throw new UserDaoException("This class is not Entity!");
         }
 
         String tableName = objectData.getClass().getSimpleName();
         List<String> fieldNames = new ArrayList<>();
-        List<String> fieldValues = new ArrayList();
+        List<String> fieldValues = new ArrayList<>();
 
-        for (Field field: fields){
+        for (Field field : fields) {
             field.setAccessible(true);
             try {
                 if (!field.isAnnotationPresent(Id.class)) {
@@ -71,8 +71,7 @@ public class DaoJdbcMapper<T> implements Dao<T> {
         logger.info("Sql string insert: {}", sqlString);
 
         try {
-            long id = dbExecutor.insertRecord(getConnection(), sqlString, fieldValues);
-            return id;
+            return dbExecutor.insertRecord(getConnection(), sqlString, fieldValues);
         } catch (Exception ex) {
             logger.error(ex.getMessage(), ex);
             throw new UserDaoException(ex);
@@ -81,20 +80,20 @@ public class DaoJdbcMapper<T> implements Dao<T> {
 
     @Override
     public int update(T objectData) {
-        logger.info("Object to update: {}" , objectData);
-        Field[] fields = objectData.getClass().getDeclaredFields();
+        logger.info("Object to update: {}", objectData);
         //Проверка есть ли аннотация @Id в классе
-        if (!isExistAnnoId(fields)) {
+        if (!isExistAnnoId(objectData.getClass())) {
             throw new UserDaoException("This class is not Entity!");
         }
 
+        Field[] fields = objectData.getClass().getDeclaredFields();
         String tableName = objectData.getClass().getSimpleName();
         List<String> fieldNames = new ArrayList<>();
-        List<String> fieldValues = new ArrayList();
+        List<String> fieldValues = new ArrayList<>();
         String fieldIdName = "";
         String fieldIdValue = "";
 
-        for (Field field: fields){
+        for (Field field : fields) {
             field.setAccessible(true);
             try {
                 if (!field.isAnnotationPresent(Id.class)) {
@@ -126,9 +125,8 @@ public class DaoJdbcMapper<T> implements Dao<T> {
     @Override
     public void createOrUpdate(T objectdata) {
         logger.info("object createOrUpdate : {}", objectdata.getClass().getSimpleName());
-        Field[] fields = objectdata.getClass().getDeclaredFields();
         //Проверка есть ли аннотация @Id в классе
-        if (!isExistAnnoId(fields)) {
+        if (!isExistAnnoId(objectdata.getClass())) {
             throw new UserDaoException("This class is not Entity!");
         }
 
@@ -139,7 +137,7 @@ public class DaoJdbcMapper<T> implements Dao<T> {
             T objectDB = optionalObj.orElse(null);
             if (objectDB != null) {//есть в базе объект для обновления
                 logger.info("Object from DB : {}", objectDB.toString());
-                if (objectdata.equals(objectDB)){
+                if (objectdata.equals(objectDB)) {
                     logger.info("Objects is equals");
                 } else {
                     logger.info("Objects not equals!");
@@ -157,18 +155,18 @@ public class DaoJdbcMapper<T> implements Dao<T> {
 
     @Override
     public Optional<T> load(long id, Class<T> clazz) {
-        logger.info("Object to load id = {} clazz : {}" , id, clazz);
-        Field[] fields = clazz.getDeclaredFields();
+        logger.info("Object to load id = {} clazz : {}", id, clazz);
         //Проверка есть ли аннотация @Id в классе
-        if (!isExistAnnoId(fields)) {
+        if (!isExistAnnoId(clazz)) {
             throw new UserDaoException("This class is not Entity!");
         }
 
+        Field[] fields = clazz.getDeclaredFields();
         String tableName = clazz.getSimpleName();
         List<String> fieldNames = new ArrayList<>();
         Class<?>[] paramTypes = new Class<?>[fields.length];
 
-        for (int i = 0; i < fields.length; i += 1){
+        for (int i = 0; i < fields.length; i += 1) {
             fieldNames.add(fields[i].getName());
             paramTypes[i] = fields[i].getType();
         }
@@ -209,7 +207,7 @@ public class DaoJdbcMapper<T> implements Dao<T> {
                     try {
                         T objectFromDb = finalConstructor.newInstance(args.toArray());
                         return objectFromDb;
-                    } catch(InvocationTargetException | IllegalAccessException | InstantiationException ex) {
+                    } catch (InvocationTargetException | IllegalAccessException | InstantiationException ex) {
                         throw new DBServiceExeption(ex);
                     }
                 }
@@ -229,7 +227,7 @@ public class DaoJdbcMapper<T> implements Dao<T> {
 
     private long getValueIdAnnotation(final T objectdata) {
         Field[] fields = objectdata.getClass().getDeclaredFields();
-        for (Field field: fields) {
+        for (Field field : fields) {
             if (field.isAnnotationPresent(Id.class)) {
                 field.setAccessible(true);
                 try {
@@ -241,12 +239,13 @@ public class DaoJdbcMapper<T> implements Dao<T> {
         }
         return -1;
     }
+
     //"select id, name from userTest where id = ?"
     private String getSqlStringSelect(String tableName, List<String> fieldNames) {
         StringBuilder sqlString = new StringBuilder("");
 
         sqlString.append("SELECT ");
-        for(int i = 0; i < fieldNames.size(); i += 1) {
+        for (int i = 0; i < fieldNames.size(); i += 1) {
             sqlString.append(fieldNames.get(i));
             if (i != fieldNames.size() - 1) {
                 sqlString.append(", ");
@@ -267,7 +266,7 @@ public class DaoJdbcMapper<T> implements Dao<T> {
         sqlString.append("UPDATE ");
         sqlString.append(tableName);
         sqlString.append(" SET ");
-        for(int i = 0; i < fieldNames.size() - 1; i += 1) {
+        for (int i = 0; i < fieldNames.size() - 1; i += 1) {
             sqlString.append(fieldNames.get(i));
             if (i != fieldNames.size() - 2) {
                 sqlString.append(" = ?, ");
@@ -281,11 +280,12 @@ public class DaoJdbcMapper<T> implements Dao<T> {
         return sqlString.toString();
     }
 
-    private boolean isExistAnnoId(Field[] fields) {
+    private boolean isExistAnnoId(Class<?> clazz) {
+        Field[] fields = clazz.getDeclaredFields();
         boolean existAnnoId = false;
 
-        for (Field field: fields) {
-            if (field.isAnnotationPresent(Id.class)){
+        for (Field field : fields) {
+            if (field.isAnnotationPresent(Id.class)) {
                 existAnnoId = true;
             }
         }
@@ -298,7 +298,7 @@ public class DaoJdbcMapper<T> implements Dao<T> {
         sqlString.append("insert into ");
         sqlString.append(tableName);
         sqlString.append("(");
-        for(int i = 0; i < fieldNames.size(); i += 1) {
+        for (int i = 0; i < fieldNames.size(); i += 1) {
             if (i != fieldNames.size() - 1) {
                 sqlString.append(fieldNames.get(i));
                 sqlString.append(", ");
@@ -307,7 +307,7 @@ public class DaoJdbcMapper<T> implements Dao<T> {
             }
         }
         sqlString.append(") values(");
-        for(int i = 0; i < fieldNames.size(); i += 1) {
+        for (int i = 0; i < fieldNames.size(); i += 1) {
             if (i != fieldNames.size() - 1) {
                 sqlString.append("?, ");
             } else {

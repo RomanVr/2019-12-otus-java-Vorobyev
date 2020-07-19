@@ -9,7 +9,7 @@ import java.util.Optional;
 import java.util.function.Function;
 
 public class DBExecutorMapper<T> {
-    private static final Logger logger = LoggerFactory.getLogger(DBExecutor.class);
+    private static final Logger logger = LoggerFactory.getLogger(DBExecutorMapper.class);
 
     public long insertRecord(Connection connection, String sql, List<String> params) throws SQLException {
         Savepoint savepoint = connection.setSavepoint("sp");

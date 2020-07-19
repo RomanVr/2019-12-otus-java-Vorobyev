@@ -38,7 +38,7 @@
                     </descriptorRefs>
                     <archive>
                         <manifest>
-                            <mainClass>ru.otus.DbServiceDemo</mainClass>
+                            <mainClass>ru.otus.DbServiceMapperDemo</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
