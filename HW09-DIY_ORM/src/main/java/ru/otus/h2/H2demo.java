@@ -16,7 +16,7 @@ public class H2demo {
     }
 
     public void createTable() throws SQLException {
-        try(PreparedStatement pst = connection.prepareStatement(
+        try (PreparedStatement pst = connection.prepareStatement(
                 "create table test(id int, name varchar(50))"
         )) {
             pst.executeUpdate();
@@ -24,7 +24,7 @@ public class H2demo {
     }
 
     public void insertRecord(int id, String name) throws SQLException {
-        try(PreparedStatement pst = connection.prepareStatement(
+        try (PreparedStatement pst = connection.prepareStatement(
                 "insert into test(id, name) values (? , ?)"
         )) {
             Savepoint savepoint = connection.setSavepoint("savePoint");
@@ -42,11 +42,11 @@ public class H2demo {
     }
 
     public void selectRecord(int id) throws SQLException {
-        try(PreparedStatement pst = connection.prepareStatement(
-            "select name from test where id = ?"
+        try (PreparedStatement pst = connection.prepareStatement(
+                "select name from test where id = ?"
         )) {
             pst.setInt(1, id);
-            try(ResultSet rs = pst.executeQuery()) {
+            try (ResultSet rs = pst.executeQuery()) {
                 StringBuilder outString = new StringBuilder();
                 outString.append("name: ");
                 if (rs.next()) {
