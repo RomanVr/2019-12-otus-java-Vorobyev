@@ -25,7 +25,7 @@
         <module>HW02-ArrayList</module>
         <module>HW06-ATM_Emulator</module>
         <module>HW07-DepartmentATM</module>
-        <module>hw08-DIY_Gson</module>
+        <module>HW08-DIY_Gson</module>
     </modules>
 
     <properties>
