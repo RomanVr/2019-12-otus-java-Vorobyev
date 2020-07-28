@@ -6,10 +6,13 @@ import ru.otus.TestAnnotation.Annotation.Test;
 
 public class SampleForTests {
     @After
-    public void methodAfter() {
-        System.out.println("Run method After");
+    public void methodAfter1() {
+        System.out.println("Run method After1");
     }
-
+    @After
+    public void methodAfter2() {
+        System.out.println("Run method After2");
+    }
     @Before
     public void methodBefore() {
         System.out.println("Run method Before");
