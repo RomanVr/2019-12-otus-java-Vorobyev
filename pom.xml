@@ -36,7 +36,7 @@
         <com.google.guava.version>27.1-jre</com.google.guava.version>
         <junit.ver>5.6.0</junit.ver>
         <javax.json.version>1.1.4</javax.json.version>
-        <com.google.code.gson>2.8.6</com.google.code.gson>
+        <com.google.code.gson>2.8.9</com.google.code.gson>
         <my.variable>42</my.variable>
     </properties>
 
